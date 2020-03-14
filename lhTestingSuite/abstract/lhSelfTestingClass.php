@@ -81,7 +81,7 @@ class lhSelfTestingClass {
                             if (is_object($await) || is_array($await)) {
                                 $await = print_r($await, TRUE);
                             }
-                            throw new Exception(_t("Wrong result: ", $result, ", awaiting: ", $await), -907);
+                            throw new Exception($this->_t("Wrong result: ", $result, ", awaiting: ", $await), -907);
                         }
                     } catch (Exception $e) {
                         if ($e->getCode() == -907) throw $e;
