@@ -23,7 +23,7 @@ class lhSelfTestingClass {
     }
     
     protected function _test_call($func, ...$args) {
-        $this->$func(...$args);
+        return $this->$func(...$args);
     }
 
     protected function _test_skip_() {
