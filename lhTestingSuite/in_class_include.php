@@ -10,7 +10,10 @@
 
     public function _test() {
         $class_name = get_class();
-        foreach (get_class_methods($class_name) as $key) {
+        $class_metods = get_class_methods($class_name);
+        if (false === array_search("_test_data", get_class_methods($class_name)))
+            throw new Exception("Function _test_data does not exist in class $class_name", -907); 
+        foreach ($class_methods as $key) {
             echo "Функция $key.";
             if (preg_match("/^_test/", $key) || preg_match("/__construct/", $key)) { 
                 echo ".. пропущена\n";
