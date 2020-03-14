@@ -38,17 +38,16 @@ class lhSelfTestingClass {
 
         $test_data = $this->_test_data();
         foreach ($class_methods as $key) {
-            echo "function $key.";
             if (preg_match("/^_test/", $key) || preg_match("/__construct/", $key)) { 
-                echo "..skipped..ok\n";
                 continue; 
             }
-            
+
             if (!isset($test_data[$key])) {
                 throw new Exception("No test definition for member function $key");
             }
+
+            echo "function $key.";
             $test_args = $test_data[$key];
-            
             
             if (!is_array($test_args)) {
                 if (!preg_match("/^_test/", $test_args)) {
