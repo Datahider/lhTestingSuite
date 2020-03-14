@@ -23,15 +23,22 @@ class lhSelfTestingClass {
     }
     
     protected function _t(...$args) {
-        $text = '';
-        foreach ($args as $a) {
-            if (is_scalar($a)) {
-                $text .= $a;
-            } else {
-                $text .= print_r($a, TRUE);
+        if (is_scalar($args[0]) && preg_match("/\%s/", $args[0])) {
+            // New behavior
+            $format = array_shift($args);
+            return sprintf($format, ...$args);
+        } else {
+            // Backward compatibility
+            $text = '';
+            foreach ($args as $a) {
+                if (is_scalar($a)) {
+                    $text .= $a;
+                } else {
+                    $text .= print_r($a, TRUE);
+                }
             }
+            return trim($text);
         }
-        return trim($text);
     }
 
     protected function _test_call($func, ...$args) {
@@ -71,6 +78,9 @@ class lhSelfTestingClass {
                 echo ". ok\n";
             } else {
                 foreach ($test_args as $args) {
+                    if (count($args) == 0) {
+                        throw new Exception($this->_t("Test array must have at least one element. Got: %s", $args));
+                    }
                     $await = array_pop($args);
                     try {
                         $result = $this->_test_call($key, ...$args);
