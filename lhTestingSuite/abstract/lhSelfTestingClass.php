@@ -32,6 +32,7 @@ class lhSelfTestingClass {
 
     public function _test() {
         $class_name = get_class($this);
+        echo "\n\nStarting tests for class $class_name...\n";
         $class_methods = get_class_methods($class_name);
         if (false === array_search("_test_data", get_class_methods($class_name)))
             throw new Exception("Function _test_data does not exist in class $class_name", -907); 
@@ -81,6 +82,7 @@ class lhSelfTestingClass {
                 echo ". ok\n";
             }
         }
+        echo "$class_name tested.. ok\n";
         return TRUE;
     }
 }
