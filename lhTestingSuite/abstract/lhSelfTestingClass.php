@@ -51,7 +51,7 @@ class lhSelfTestingClass {
 
         $test_data = $this->_test_data();
         foreach ($class_methods as $key) {
-            if (preg_match("/^_test/", $key) || preg_match("/__construct/", $key)) { 
+            if (preg_match("/^_test/", $key) || preg_match("/^__construct$/", $key) || preg_match("/^_t$/", $key)) { 
                 continue; 
             }
 
