@@ -61,7 +61,7 @@ class lhSelfTestingClass {
                 foreach ($test_args as $args) {
                     $await = array_pop($args);
                     try {
-                        $result = $this->_test_call($key, $args);
+                        $result = $this->_test_call($key, ...$args);
                         if (is_a($await, 'Exception')) {
                             throw new Exception("Awaiting an Exception with code: ".$await->getCode()." but did not got it", -907);
                         }
