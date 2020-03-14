@@ -4,7 +4,7 @@
  *  
  */
 
-    private function _test_skip_() {
+    protected function _test_skip_() {
         echo '.пропущено.';
     }
 
