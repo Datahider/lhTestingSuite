@@ -74,7 +74,10 @@ class lhSelfTestingClass {
                     } catch (Exception $e) {
                         if ($e->getCode() == -907) throw $e;
                         if (!is_a($await, "Exception") || ($e->getCode() != $await->getCode()) ) {
-                            throw new Exception("Invalid Exception with code: (".$e->getCode().") ".$e->getMessage());
+                            throw new Exception("Invalid Exception with code: (".$e->getCode().")\n"
+                                    . "It goes from line ".$e->getLine().' of '.$e->getFile()."\n"
+                                    . "Message is: ".$e->getMessage()."\n"
+                                    . "Trace:\n".$e->getTraceAsString());
                         }
                     }
                     echo '.';
