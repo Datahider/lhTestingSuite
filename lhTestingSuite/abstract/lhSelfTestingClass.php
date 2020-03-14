@@ -26,7 +26,15 @@ class lhSelfTestingClass {
         if (is_scalar($args[0]) && preg_match("/\%s/", $args[0])) {
             // New behavior
             $format = array_shift($args);
-            return sprintf($format, ...$args);
+            $strings = [];
+            foreach ($args as $value) {
+                if (is_scalar($value)) {
+                    $strings[] = $value;
+                } else {
+                    $strings[] = print_r($value, TRUE);
+                }
+            }
+            return sprintf($format, ...$strings);
         } else {
             // Backward compatibility
             $text = '';
