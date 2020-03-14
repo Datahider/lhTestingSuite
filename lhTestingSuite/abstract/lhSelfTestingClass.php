@@ -22,6 +22,18 @@ class lhSelfTestingClass {
                 . "];");
     }
     
+    protected function _t(...$args) {
+        $text = '';
+        foreach ($args as $a) {
+            if (is_scalar($a)) {
+                $text .= $a;
+            } else {
+                $text .= print_r($a, TRUE);
+            }
+        }
+        return trim($text);
+    }
+
     protected function _test_call($func, ...$args) {
         return $this->$func(...$args);
     }
@@ -69,7 +81,7 @@ class lhSelfTestingClass {
                             if (is_object($await) || is_array($await)) {
                                 $await = print_r($await, TRUE);
                             }
-                            throw new Exception("Wrong result: $result, awaiting: $await", -907);
+                            throw new Exception(_t("Wrong result: ", $result, ", awaiting: ", $await), -907);
                         }
                     } catch (Exception $e) {
                         if ($e->getCode() == -907) throw $e;
