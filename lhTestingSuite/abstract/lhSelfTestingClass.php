@@ -35,7 +35,7 @@ class lhSelfTestingClass {
         echo "\n\nStarting tests for class $class_name...\n";
         $class_methods = get_class_methods($class_name);
         if (false === array_search("_test_data", get_class_methods($class_name)))
-            throw new Exception("Function _test_data does not exist in class $class_name", -907); 
+            throw new Exception("Function _test_data does not exist in class $class_name", -10001); 
 
         $test_data = $this->_test_data();
         foreach ($class_methods as $key) {
@@ -44,7 +44,7 @@ class lhSelfTestingClass {
             }
 
             if (!isset($test_data[$key])) {
-                throw new Exception("No test definition for member function $key");
+                throw new Exception("No test definition for $class_name->$key", -10001);
             }
 
             echo "function $key.";
@@ -52,7 +52,7 @@ class lhSelfTestingClass {
             
             if (!is_array($test_args)) {
                 if (!preg_match("/^_test/", $test_args)) {
-                    throw new Exception("Test function name for $class_name::$key() must start with _test");
+                    throw new Exception("Test function name for $class_name->$key() must start with _test");
                 }
                 $func = $test_args;
                 $this->_test_call($func);
