@@ -49,7 +49,7 @@ class lhSelfTestingClass {
         }
     }
 
-    protected function _test_call($func, ...$args) {
+    protected function _test_call($func, ...$args) { // Copy this to your class to test private methods
         return $this->$func(...$args);
     }
 
@@ -85,7 +85,9 @@ class lhSelfTestingClass {
                 $this->_test_call($func);
                 echo ". ok\n";
             } else {
+                $iteration = 0;
                 foreach ($test_args as $args) {
+                    $iteration++;
                     if (count($args) == 0) {
                         throw new Exception($this->_t("Test array must have at least one element. Got: %s", $args));
                     }
@@ -93,14 +95,12 @@ class lhSelfTestingClass {
                     try {
                         $result = $this->_test_call($key, ...$args);
                         if (is_a($await, 'Exception')) {
-                            throw new Exception("Awaiting an Exception with code: ".$await->getCode()." but did not got it", -907);
+                            throw new Exception("Awaiting an Exception with code: ".$await->getCode()." but did not got it on iteration $iteration", -907);
                         }
-                        if ($result != $await) {
-                            if (is_object($await) || is_array($await)) {
-                                $await = print_r($await, TRUE);
-                            }
-                            throw new Exception($this->_t("Wrong result: ", $result, ", awaiting: ", $await), -907);
+                        if (!is_a($await, 'lhTest')) {
+                            $await = new lhTest(lhTest::EQ, $await);
                         }
+                        $await->test($result);
                     } catch (Exception $e) {
                         if ($e->getCode() == -907) throw $e;
                         if (!is_a($await, "Exception") || ($e->getCode() != $await->getCode()) ) {
