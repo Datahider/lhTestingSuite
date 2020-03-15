@@ -29,6 +29,8 @@ class lhTest extends lhSelfTestingClass {
     const FIELD_GE = '_FIELD_GE_';
     const FIELD_RANGE = '_FIELD_RANGE_';
     const FIELD_PCRE = '_FIELD_PCRE_';
+    const FIELD_IS_A = '_FIELD_IS_A_';
+    const FIELD_IS_ARRAY = '_FIELD_IS_ARRAY_';
     const IS_ARRAY = '_IS_ARRAY_';
     const ELEM = '_ELEM_';
     const ELEM_NE = '_ELEM_NE_';
@@ -38,6 +40,8 @@ class lhTest extends lhSelfTestingClass {
     const ELEM_GE = '_ELEM_GE_';
     const ELEM_RANGE = '_ELEM_RANGE_';
     const ELEM_PCRE = '_ELEM_PCRE_';
+    const ELEM_IS_A = '_ELEM_IS_A_';           
+    const ELEM_IS_ARRAY = '_ELEM_IS_ARRAY_';
 
     private $func;
     private $args;
@@ -151,6 +155,14 @@ class lhTest extends lhSelfTestingClass {
         $this->_PCRE_($_result->$_name, $_pattern);
     }
     
+    protected function _FIELD_IS_A_($_result, $_name, $_class_name) {
+        $this->_IS_A_($_result->$_name, $_class_name);
+    }
+    
+    protected function _FIELD_IS_ARRAY_($_result, $_name) {
+        $this->_IS_ARRAY_($_result->$_name);
+    }
+    
     protected function _IS_ARRAY_($_result) {
         if (!is_array($_result)) {
             throw new Exception($this->_t("Awaiting result to be an array, but got %s", $_result), -10002);
@@ -192,7 +204,15 @@ class lhTest extends lhSelfTestingClass {
     protected function _ELEM_PCRE_($_result, $_name, $_pattern) {
         $this->_PCRE_($_result[$_name], $_pattern);
     }
+
+    protected function _ELEM_IS_A_($_result, $_name, $_class_name) {
+        $this->_IS_A_($_result[$_name], $_class_name);
+    }
     
+    protected function _ELEM_IS_ARRAY_($_result, $_name) {
+        $this->_IS_ARRAY_($_result[$_name]);
+    }
+        
     protected function _test_data() {
         return [
             'test' => '_test_skip_',
@@ -317,6 +337,15 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value": 18}'), "value", "/\\d{2,3}/", NULL], 
                 [json_decode('{"value": "Hello World"}'), "value", "/d$/", NULL], 
             ],
+            '_FIELD_IS_A_' => [
+                [json_decode('{"value": 575}'), "value", 'stdClass', new Exception("Is not an instance of given class", -10002)], 
+                [json_decode('{"value": {"a": [575]}}'), "value", 'stdClass', NULL], 
+            ],
+            '_FIELD_IS_ARRAY_' => [
+                [json_decode('{"value": 575}'), "value", new Exception("Is not an array", -10002)], 
+                [json_decode('{"value": {"a": [575]}}'), "value", new Exception("Is not an array", -10002)], 
+                [json_decode('{"value": [575]}'), "value", NULL], 
+            ],
             '_IS_ARRAY_' => [
                 [json_decode('{"value": "some text"}'), new Exception("It is not an array", -10002)], 
                 [[3812], NULL], 
@@ -385,6 +414,17 @@ class lhTest extends lhSelfTestingClass {
                 [["value"=>3], "value", "/\\d{2,3}/", new Exception("Does not match", -10002)], 
                 [["value"=>18], "value", "/\\d{2,3}/", NULL], 
                 [["value"=>"Hello World"], "value", "/d$/", NULL], 
+            ],
+            '_ELEM_IS_A_' => [
+                [[5, 6, json_decode('{"value": 575}')], 1, 'stdClass', new Exception("Is not an instance of given class", -10002)], 
+                [[5, 6, json_decode('{"value": 575}')], 2, 'stdClass', NULL], 
+                [5, 2, 'stdClass', new Exception("Result is not an array", -10002)], 
+                ['a string', 2, 'stdClass', new Exception("Result is not an array", -10002)], 
+            ],
+            '_ELEM_IS_ARRAY_' => [
+                [[1, 2, 4], 2 , new Exception("Is not an array", -10002)], 
+                [[1, 2, [3, 5]], 1 , new Exception("Is not an array", -10002)], 
+                [[5, [4, 8]], 1 , NULL], 
             ],
         ];
     }
