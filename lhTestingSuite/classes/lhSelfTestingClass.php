@@ -19,7 +19,7 @@ class lhSelfTestingClass {
     private $func;
     private $iteration;
 
-    private function log($_message, $_level=10) {
+    protected function log($_message, $_level=10) {
         $class = get_class($this);
         $level = $class::DEBUG_LEVEL;
         if ($_level <= $level) {
