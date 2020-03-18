@@ -195,9 +195,10 @@ class lhSelfTestingClass {
             if ($check == 'log') continue;
             if ($check == '_t') continue;
             if (preg_match("/^_test/", $check)) continue;
+            $did_not_tested[] = $check;
         }
-        if (count($this->methods)) {
-            throw new Exception("Some metods have not tested:\n". print_r($this->methods, TRUE));
+        if (count($did_not_tested)) {
+            throw new Exception("You have no test definitions for theese functions:\n". print_r($did_not_tested, TRUE), -10001);
         }
         return TRUE;
     }
