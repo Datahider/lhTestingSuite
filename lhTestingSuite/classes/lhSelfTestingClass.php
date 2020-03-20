@@ -24,12 +24,14 @@ class lhSelfTestingClass {
         $level = $class::DEBUG_LEVEL;
         if ($_level <= $level) {
             $log_message = is_scalar($_message) ? $_message : print_r($_message, true);
+            $mem = memory_get_usage();
+            $log_message = "|$mem| - $log_message";
             if (lhSelfTestingClass::$logfile) {
                 $log_file = fopen(lhSelfTestingClass::$logfile, 'a');
                 fwrite($log_file, date(DATE_ISO8601).": ${class}[$level]:: $log_message\n"); 
                 fclose($log_file);
             } else {
-                error_log("$class\[$level\]:: $log_message");
+                error_log("${class}[$level]:: $log_message");
             }
         }
     }
