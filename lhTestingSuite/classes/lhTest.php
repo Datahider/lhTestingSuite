@@ -53,7 +53,7 @@ class lhTest extends lhSelfTestingClass {
     
     public function test($_result) {
         if (is_callable($this->func)) {
-            $this->func($_result, ...$this->args);
+            $this->$func($_result, ...$this->args);
         } elseif (is_callable([$this, $this->func])) {
             $func = $this->func;
             $this->$func($_result, ...$this->args);
