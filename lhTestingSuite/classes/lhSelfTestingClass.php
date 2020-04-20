@@ -9,8 +9,6 @@
  * @author user
  */
 class lhSelfTestingClass {
-    const DEBUG_LEVEL = 10;
-
     static public $logfile;
     
     private $test_data;
@@ -20,16 +18,16 @@ class lhSelfTestingClass {
     private $iteration;
 
     protected function log($_message, $_level=10) {
-        if (defined('LH_DEBUG_NONE')) { return; }
         $class = get_class($this);
-        $level = $class::DEBUG_LEVEL;
+        $const_name = strtoupper($class). '_DEBUG_LEVEL';
+        $level = defined($const_name) ? constant($const_name) : 0; 
         if ($_level <= $level) {
             $log_message = is_scalar($_message) ? $_message : print_r($_message, true);
             $mem = memory_get_usage();
             $log_message = "|$mem| - $log_message";
             if (lhSelfTestingClass::$logfile) {
                 $log_file = fopen(lhSelfTestingClass::$logfile, 'a');
-                fwrite($log_file, date(DATE_ISO8601).": ${class}[$level]:: $log_message\n"); 
+                fwrite($log_file, date(DATE_ISO8601).": ${class}[$_level]:: $log_message\n"); 
                 fclose($log_file);
             } else {
                 error_log("${class}[$level]:: $log_message");
