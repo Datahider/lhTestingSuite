@@ -52,10 +52,10 @@ class lhTest extends lhSelfTestingClass {
     }
     
     public function test($_result) {
-        if (is_callable($this->func)) {
-            $this->func($_result, ...$this->args);
-        } elseif (is_callable([$this, $this->func])) {
-            $func = $this->func;
+        $func = $this->func;
+        if (is_callable($func)) {
+            $func($_result, ...$this->args);
+        } elseif (is_callable([$this, $func])) {
             $this->$func($_result, ...$this->args);
         } else {
             throw new Exception("Constructor argument 1 must be a callable or one of predefined constants");
@@ -213,9 +213,25 @@ class lhTest extends lhSelfTestingClass {
         $this->_IS_ARRAY_($_result[$_name]);
     }
         
+    protected function _test_test() {
+        $this->func = function ($result) {
+            if ($result == 'throw977') {
+                throw new Exception("throw 977", 977);
+            }
+        };
+        
+        $this->test(5);
+        try {
+            $this->test('throw977');
+        } catch (Exception $e) {
+            if ($e->getCode() != 977) {
+                throw $e;
+            }
+        }
+    }
+    
     protected function _test_data() {
         return [
-            'test' => '_test_skip_',
             '_EQ_' => [
                 [8, 8, NULL], 
                 ['Yes', 'Yes', NULL], 
@@ -426,6 +442,7 @@ class lhTest extends lhSelfTestingClass {
                 [[1, 2, [3, 5]], 1 , new Exception("Is not an array", -10002)], 
                 [[5, [4, 8]], 1 , NULL], 
             ],
+            'test' => '_test_test'
         ];
     }
 
