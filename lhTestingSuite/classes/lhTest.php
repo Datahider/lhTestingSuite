@@ -64,58 +64,58 @@ class lhTest extends lhSelfTestingClass {
     
     protected function _EQ_($_result, $_value) {
         if (!($_result == $_value)) {
-            throw new Exception($this->_t("Awaiting result to be equals %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be equals %s but got %s", $_value, $_result), -10002);
         }
     }
     
     protected function _NE_($_result, $_value) {
         if (!($_result != $_value)) {
-            throw new Exception($this->_t("Awaiting result not to be equals %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value not to be equals %s but got %s", $_value, $_result), -10002);
         }
     }
     
     protected function _LT_($_result, $_value) {
         if (!($_result < $_value)) {
-            throw new Exception($this->_t("Awaiting result to be less than %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be less than %s but got %s", $_value, $_result), -10002);
         }
     }
 
     protected function _LE_($_result, $_value) {
         if (!($_result <= $_value)) {
-            throw new Exception($this->_t("Awaiting result to be less than or equals %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be less than or equals %s but got %s", $_value, $_result), -10002);
         }
     }
     
     protected function _GT_($_result, $_value) {
         if (!($_result > $_value)) {
-            throw new Exception($this->_t("Awaiting result to be greater than %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be greater than %s but got %s", $_value, $_result), -10002);
         }
     }
 
     protected function _GE_($_result, $_value) {
         if (!($_result >= $_value)) {
-            throw new Exception($this->_t("Awaiting result to be greater than or equals %s but got %s", $_value, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be greater than or equals %s but got %s", $_value, $_result), -10002);
         }
     }
     
     protected function _RANGE_($_result, $_value1, $_value2) {
         if (!($_result >= $_value1)) {
-            throw new Exception($this->_t("Awaiting result to be greater than or equals %s but got %s", $_value1, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be greater than or equals %s but got %s", $_value1, $_result), -10002);
         }
         if (!($_result <= $_value2)) {
-            throw new Exception($this->_t("Awaiting result to be less than or equals %s but got %s", $_value2, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be less than or equals %s but got %s", $_value2, $_result), -10002);
         }
     }
     
     protected function _PCRE_($_result, $_pattern) {
         if (!preg_match($_pattern, $_result)) {
-            throw new Exception($this->_t("Awaiting result to match %s but got %s", $_pattern, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to match %s but got %s", $_pattern, $_result), -10002);
         }
     }
     
     protected function _IS_A_($_result, $_class_name) {
         if (!is_a($_result, $_class_name)) {
-            throw new Exception($this->_t("Awaiting result to be an instance of %s but got %s", $_class_name, $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be an instance of %s but got %s", $_class_name, $_result), -10002);
         }
     }
     
@@ -165,7 +165,7 @@ class lhTest extends lhSelfTestingClass {
     
     protected function _IS_ARRAY_($_result) {
         if (!is_array($_result)) {
-            throw new Exception($this->_t("Awaiting result to be an array, but got %s", $_result), -10002);
+            throw new Exception($this->_t("Awaiting value to be an array, but got %s", $_result), -10002);
         }
     }
     
