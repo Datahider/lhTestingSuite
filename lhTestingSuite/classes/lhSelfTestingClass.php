@@ -35,7 +35,10 @@ class lhSelfTestingClass {
         }
     }
 
-    
+    protected function logFunction($function, $level=10, $is_static=false) {
+        $this->log(get_class($this) . ($is_static ? '::' : '->') . $function, $level);
+    }
+
     protected function _test_data() {
         $this->log(__FUNCTION__);
         throw new Exception("YourClass->_test_data() must return an array alike:\n"
