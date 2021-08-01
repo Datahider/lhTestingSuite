@@ -197,6 +197,7 @@ class lhSelfTestingClass {
         while ($check = array_shift($this->methods)) {
             if ($check == '__construct') continue;
             if ($check == 'log') continue;
+            if ($check == 'logFunction') continue;
             if ($check == '_t') continue;
             if (preg_match("/^_test/", $check)) continue;
             $did_not_tested[] = $check;

@@ -42,6 +42,7 @@ class lhTest extends lhSelfTestingClass {
     const ELEM_PCRE = '_ELEM_PCRE_';
     const ELEM_IS_A = '_ELEM_IS_A_';           
     const ELEM_IS_ARRAY = '_ELEM_IS_ARRAY_';
+    const FUNC = '_FUNC_';
 
     private $func;
     private $args;
@@ -212,7 +213,11 @@ class lhTest extends lhSelfTestingClass {
     protected function _ELEM_IS_ARRAY_($_result, $_name) {
         $this->_IS_ARRAY_($_result[$_name]);
     }
-        
+       
+    protected function _FUNC_($_result, $_name, $value, ...$_arg) {
+        $this->_EQ_($_result->$_name(...$_arg), $value);
+    }
+    
     protected function _test_test() {
         $this->func = function ($result) {
             if ($result == 'throw977') {
@@ -228,6 +233,10 @@ class lhTest extends lhSelfTestingClass {
                 throw $e;
             }
         }
+    }
+    
+    protected function _test_17($a, $b) {
+        return $a + $b;
     }
     
     protected function _test_data() {
@@ -441,6 +450,12 @@ class lhTest extends lhSelfTestingClass {
                 [[1, 2, 4], 2 , new Exception("Is not an array", -10002)], 
                 [[1, 2, [3, 5]], 1 , new Exception("Is not an array", -10002)], 
                 [[5, [4, 8]], 1 , NULL], 
+            ],
+            '_FUNC_' => [
+                [$this, '_EQ_', null, 3, 3, null],
+                [$this, '_EQ_', null, 3, 2, new Exception("Not equals", -10002)],
+                [$this, '_test_17', 17, 10, 7, null],
+                [$this, '_test_17', 18, 10, 7, new Exception("Not equals", -10002)]
             ],
             'test' => '_test_test'
         ];
