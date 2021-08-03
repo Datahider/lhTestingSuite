@@ -46,10 +46,18 @@ class lhTest extends lhSelfTestingClass {
 
     private $func;
     private $args;
-    
+    private $reader;
+
     public function __construct($_func, ...$_args) {
         $this->func = $_func;
         $this->args = $_args;
+        $this->reader = function & ($object, $property) {
+            $value = & Closure::bind(function & () use ($property) {
+                return $this->$property;
+            }, $object, $object)->__invoke();
+
+            return $value;
+        };
     }
     
     public function test($_result) {
@@ -125,43 +133,93 @@ class lhTest extends lhSelfTestingClass {
     }
 
     protected function _FIELD_EQ_($_result, $_name, $_value) {
-        $this->_EQ_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_EQ_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_EQ_($reader($_result, $_name), $_value);
+        }
     }
 
     protected function _FIELD_NE_($_result, $_name, $_value) {
-        $this->_NE_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_NE_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_NE_($reader($_result, $_name), $_value);
+        }
     }
     
     protected function _FIELD_LT_($_result, $_name, $_value) {
-        $this->_LT_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_LT_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_LT_($reader($_result, $_name), $_value);
+        }
     }
 
     protected function _FIELD_LE_($_result, $_name, $_value) {
-        $this->_LE_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_LE_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_LE_($reader($_result, $_name), $_value);
+        }
     }
     
     protected function _FIELD_GT_($_result, $_name, $_value) {
-        $this->_GT_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_GT_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_GT_($reader($_result, $_name), $_value);
+        }
     }
 
     protected function _FIELD_GE_($_result, $_name, $_value) {
-        $this->_GE_($_result->$_name, $_value);
+        if (is_a($_result, 'stdClass')) {
+            $this->_GE_($_result->$_name, $_value);
+        } else {
+            $reader = $this->reader;
+            $this->_GE_($reader($_result, $_name), $_value);
+        }
     }
     
     protected function _FIELD_RANGE_($_result, $_name, $_value1, $_value2) {
-        $this->_RANGE_($_result->$_name, $_value1, $_value2);
+        if (is_a($_result, 'stdClass')) {
+            $this->_RANGE_($_result->$_name, $_value1, $_value2);
+        } else {
+            $reader = $this->reader;
+            $this->_RANGE_($reader($_result, $_name), $_value1, $_value2);
+        }
     }
     
     protected function _FIELD_PCRE_($_result, $_name, $_pattern) {
-        $this->_PCRE_($_result->$_name, $_pattern);
+        if (is_a($_result, 'stdClass')) {
+            $this->_PCRE_($_result->$_name, $_pattern);
+        } else {
+            $reader = $this->reader;
+            $this->_PCRE_($reader($_result, $_name), $_pattern);
+        }
     }
     
     protected function _FIELD_IS_A_($_result, $_name, $_class_name) {
-        $this->_IS_A_($_result->$_name, $_class_name);
+        if (is_a($_result, 'stdClass')) {
+            $this->_IS_A_($_result->$_name, $_class_name);
+        } else {
+            $reader = $this->reader;
+            $this->_IS_A_($reader($_result, $_name), $_class_name);
+        }
     }
     
     protected function _FIELD_IS_ARRAY_($_result, $_name) {
-        $this->_IS_ARRAY_($_result->$_name);
+        if (is_a($_result, 'stdClass')) {
+            $this->_IS_ARRAY_($_result->$_name);
+        } else {
+            $reader = $this->reader;
+            $this->_IS_ARRAY_($reader($_result, $_name));
+        }
     }
     
     protected function _IS_ARRAY_($_result) {
@@ -240,6 +298,7 @@ class lhTest extends lhSelfTestingClass {
     }
     
     protected function _test_data() {
+        $closure_test = new lhTest(769);
         return [
             '_EQ_' => [
                 [8, 8, NULL], 
@@ -306,6 +365,8 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 11, NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, new Exception("Not equals", -10002)], 
+                [$closure_test, 'func', 769, NULL],
+                [$closure_test, 'func', 768, new Exception("Not equals", -10002)],
             ],
             '_FIELD_EQ_' => '_test_skip_',  // Tested by _FIELD_
             '_FIELD_NE_' => [
@@ -314,6 +375,8 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 11, new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, NULL], 
+                [$closure_test, 'func', 768, NULL],
+                [$closure_test, 'func', 769, new Exception("Equals", -10002)],
             ],
             '_FIELD_LT_' => [
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value2", "another text", new Exception("Equals", -10002)], 
@@ -322,6 +385,9 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 11, new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, NULL], 
+                [$closure_test, 'func', 770, NULL],
+                [$closure_test, 'func', 767, new Exception("Greater", -10002)],
+                [$closure_test, 'func', 769, new Exception("Equals", -10002)],
             ],
             '_FIELD_LE_' => [
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value2", "another text", NULL], 
@@ -330,6 +396,9 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 11, NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, NULL], 
+                [$closure_test, 'func', 770, NULL],
+                [$closure_test, 'func', 768, new Exception("Greater", -10002)],
+                [$closure_test, 'func', 769, NULL],
             ],
             '_FIELD_GT_' => [
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value2", "another text", new Exception("Equals", -10002)], 
@@ -338,6 +407,9 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 11, new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", new Exception("Equals", -10002)], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 7, NULL], 
+                [$closure_test, 'func', 770, new Exception("Less", -10002)],
+                [$closure_test, 'func', 768, NULL],
+                [$closure_test, 'func', 769, new Exception("Equals", -10002)],
             ],
             '_FIELD_GE_' => [
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value2", "another text", NULL], 
@@ -347,12 +419,18 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", "11", NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 7, NULL], 
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, new Exception("Less", -10002)], 
+                [$closure_test, 'func', 770, new Exception("Less", -10002)],
+                [$closure_test, 'func', 769, NULL],
+                [$closure_test, 'func', 768, NULL],
             ],
             '_FIELD_RANGE_' => [
                 [json_decode('{"value": 8}'), "value", 8, 8, NULL], 
                 [json_decode('{"value": 15}'), "value", 10, 20, NULL], 
                 [json_decode('{"value": "So so"}'), "value", 'Very good', 'Bad', new Exception("Out of range", -10002)],
                 [json_decode('{"value": "So so"}'), "value", 'Bad', 'Very good', NULL],
+                [$closure_test, 'func', 767, 769, NULL],
+                [$closure_test, 'func', 770, 780, new Exception("Out of range", -10002)],
+                [$closure_test, 'func', 768, 780, NULL],
             ],
             '_FIELD_PCRE_' => [
                 [json_decode('{"value": 575}'), "value", "/\\d+/", NULL], 
@@ -361,15 +439,20 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value": 3}'), "value", "/\\d{2,3}/", new Exception("Does not match", -10002)], 
                 [json_decode('{"value": 18}'), "value", "/\\d{2,3}/", NULL], 
                 [json_decode('{"value": "Hello World"}'), "value", "/d$/", NULL], 
+                [$closure_test, 'func', "/\\s/", new Exception("Less", -10002)],
+                [$closure_test, 'func', "/\\d\\d\\d/", NULL],
+                [$closure_test, 'func', "/\\d+/", NULL],
             ],
             '_FIELD_IS_A_' => [
                 [json_decode('{"value": 575}'), "value", 'stdClass', new Exception("Is not an instance of given class", -10002)], 
                 [json_decode('{"value": {"a": [575]}}'), "value", 'stdClass', NULL], 
+                [$closure_test, 'func', 'stdClass', new Exception("Not an object", -10002)],
             ],
             '_FIELD_IS_ARRAY_' => [
                 [json_decode('{"value": 575}'), "value", new Exception("Is not an array", -10002)], 
                 [json_decode('{"value": {"a": [575]}}'), "value", new Exception("Is not an array", -10002)], 
                 [json_decode('{"value": [575]}'), "value", NULL], 
+                [$closure_test, 'func', new Exception("Not an array", -10002)],
             ],
             '_IS_ARRAY_' => [
                 [json_decode('{"value": "some text"}'), new Exception("It is not an array", -10002)], 
