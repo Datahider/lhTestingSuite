@@ -135,6 +135,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_EQ_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_EQ_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_EQ_($reader($_result, $_name), $_value);
@@ -144,6 +146,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_NE_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_NE_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_NE_($reader($_result, $_name), $_value);
@@ -153,6 +157,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_LT_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_LT_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_LT_($reader($_result, $_name), $_value);
@@ -162,6 +168,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_LE_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_LE_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_LE_($reader($_result, $_name), $_value);
@@ -171,6 +179,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_GT_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_GT_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_GT_($reader($_result, $_name), $_value);
@@ -180,6 +190,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_GE_($_result, $_name, $_value) {
         if (is_a($_result, 'stdClass')) {
             $this->_GE_($_result->$_name, $_value);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_GE_($reader($_result, $_name), $_value);
@@ -189,6 +201,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_RANGE_($_result, $_name, $_value1, $_value2) {
         if (is_a($_result, 'stdClass')) {
             $this->_RANGE_($_result->$_name, $_value1, $_value2);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_RANGE_($reader($_result, $_name), $_value1, $_value2);
@@ -198,6 +212,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_PCRE_($_result, $_name, $_pattern) {
         if (is_a($_result, 'stdClass')) {
             $this->_PCRE_($_result->$_name, $_pattern);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_PCRE_($reader($_result, $_name), $_pattern);
@@ -207,6 +223,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_IS_A_($_result, $_name, $_class_name) {
         if (is_a($_result, 'stdClass')) {
             $this->_IS_A_($_result->$_name, $_class_name);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_IS_A_($reader($_result, $_name), $_class_name);
@@ -216,6 +234,8 @@ class lhTest extends lhSelfTestingClass {
     protected function _FIELD_IS_ARRAY_($_result, $_name) {
         if (is_a($_result, 'stdClass')) {
             $this->_IS_ARRAY_($_result->$_name);
+        } elseif (is_a($_result, 'Exception')) {
+            throw $_result;
         } else {
             $reader = $this->reader;
             $this->_IS_ARRAY_($reader($_result, $_name));
@@ -294,7 +314,7 @@ class lhTest extends lhSelfTestingClass {
     }
     
     protected function _test_17($a, $b) {
-        return $a + $b;
+        return $a / $b;
     }
     
     protected function _test_data() {
@@ -367,6 +387,7 @@ class lhTest extends lhSelfTestingClass {
                 [json_decode('{"value1": "some text","value2": "another text", "value3": 11}'), "value3", 15, new Exception("Not equals", -10002)], 
                 [$closure_test, 'func', 769, NULL],
                 [$closure_test, 'func', 768, new Exception("Not equals", -10002)],
+                [$closure_test, 'dumb', 769, new Exception("Field unknown", -10002)]
             ],
             '_FIELD_EQ_' => '_test_skip_',  // Tested by _FIELD_
             '_FIELD_NE_' => [
@@ -537,8 +558,8 @@ class lhTest extends lhSelfTestingClass {
             '_FUNC_' => [
                 [$this, '_EQ_', null, 3, 3, null],
                 [$this, '_EQ_', null, 3, 2, new Exception("Not equals", -10002)],
-                [$this, '_test_17', 17, 10, 7, null],
-                [$this, '_test_17', 18, 10, 7, new Exception("Not equals", -10002)]
+                [$this, '_test_17', 2, 10, 5, null],
+                [$this, '_test_17', 2, 10, 3, new Exception("Not equals", -10002)]
             ],
             'test' => '_test_test'
         ];
