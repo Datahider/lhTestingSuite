@@ -45,10 +45,10 @@ class lhSelfTestingClass {
         $log_message = "|$mem| - $log_message";
         if (lhSelfTestingClass::$logfile) {
             $log_file = fopen(lhSelfTestingClass::$logfile, 'a');
-            fwrite($log_file, date(DATE_ISO8601).": ${class}[$_level]:: $log_message\n"); 
+            fwrite($log_file, date(DATE_ISO8601).": STATIC:: $log_message\n"); 
             fclose($log_file);
         } else {
-            error_log("${class}[$level]:: $log_message");
+            error_log("STATIC:: $log_message");
         }
     }
 

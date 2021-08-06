@@ -561,7 +561,13 @@ class lhTest extends lhSelfTestingClass {
                 [$this, '_test_17', 2, 10, 5, null],
                 [$this, '_test_17', 2, 10, 3, new Exception("Not equals", -10002)]
             ],
-            'test' => '_test_test'
+            'test' => '_test_test',
+            'logFunction' => [
+                [__FUNCTION__, null]
+            ],
+            'logStatic' => [
+                ['test log message', null],
+            ]
         ];
     }
 
