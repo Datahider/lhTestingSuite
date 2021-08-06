@@ -38,6 +38,19 @@ class lhSelfTestingClass {
     protected function logFunction($function, $level=10, $is_static=false) {
         $this->log(get_class($this) . ($is_static ? '::' : '->') . $function, $level);
     }
+    
+    public static function logStatic($_message) {
+        $log_message = is_scalar($_message) ? $_message : print_r($_message, true);
+        $mem = memory_get_usage();
+        $log_message = "|$mem| - $log_message";
+        if (lhSelfTestingClass::$logfile) {
+            $log_file = fopen(lhSelfTestingClass::$logfile, 'a');
+            fwrite($log_file, date(DATE_ISO8601).": ${class}[$_level]:: $log_message\n"); 
+            fclose($log_file);
+        } else {
+            error_log("${class}[$level]:: $log_message");
+        }
+    }
 
     protected function _test_data() {
         $this->log(__FUNCTION__);
@@ -198,6 +211,7 @@ class lhSelfTestingClass {
             if ($check == '__construct') continue;
             if ($check == 'log') continue;
             if ($check == 'logFunction') continue;
+            if ($check == 'logStatic') continue;
             if ($check == '_t') continue;
             if (preg_match("/^_test/", $check)) continue;
             $did_not_tested[] = $check;
