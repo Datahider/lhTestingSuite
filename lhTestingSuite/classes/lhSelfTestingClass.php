@@ -123,7 +123,7 @@ class lhSelfTestingClass {
     
     private function _test_runTests() {
         $this->log(__FUNCTION__);
-        echo sprintf("\nTesting %s...\n", get_class());
+        echo sprintf("\nTesting %s...\n", get_class($this));
         while ($this->func = array_shift($this->tests)) {
             echo "function $this->func";
             $this->iteration = 0;
