@@ -17,14 +17,16 @@ class lhSelfTestingClass {
     private $func;
     private $iteration;
 
-    protected function log($_message, $_level=10) {
+    protected function log($_message='call', $_level=10) {
         $class = get_class($this);
         $const_name = strtoupper($class). '_DEBUG_LEVEL';
         $level = defined($const_name) ? constant($const_name) : 0; 
         if ($_level <= $level) {
+            $debug = debug_backtrace(false, 2);
+            $function = $debug[1]['class']. '->'. $debug[1]['function'];
             $log_message = is_scalar($_message) ? $_message : print_r($_message, true);
             $mem = memory_get_usage();
-            $log_message = "|$mem| - $log_message";
+            $log_message = "|$mem| $function - $log_message";
             if (lhSelfTestingClass::$logfile) {
                 $log_file = fopen(lhSelfTestingClass::$logfile, 'a');
                 fwrite($log_file, date(DATE_ISO8601).": ${class}[$_level]:: $log_message\n"); 
@@ -53,7 +55,7 @@ class lhSelfTestingClass {
     }
 
     protected function _test_data() {
-        $this->log(__FUNCTION__);
+        $this->log();
         throw new Exception("YourClass->_test_data() must return an array alike:\n"
                 . "[\n"
                 . "  'simple_function_name' => [\n"
@@ -66,7 +68,7 @@ class lhSelfTestingClass {
     }
     
     protected function _t(...$args) {
-        $this->log(__FUNCTION__);
+        $this->log();
         if (is_scalar($args[0]) && preg_match("/\%s/", $args[0])) {
             // New behavior
             $format = array_shift($args);
@@ -94,7 +96,7 @@ class lhSelfTestingClass {
     }
 
     protected function _test_call($func, $args) { // Copy this to your class to test private methods
-        $this->log(__FUNCTION__);
+        $this->log();
         try {
             return $this->$func(...$args);
         } catch (Exception $exc) {
@@ -103,12 +105,12 @@ class lhSelfTestingClass {
     }
 
     protected function _test_skip_() {
-        $this->log(__FUNCTION__);
+        $this->log();
         echo ' skipped';
     }
     
     public function _test() {
-        $this->log(__FUNCTION__);
+        $this->log();
         $this->test_data = $this->_test_data();
         $this->tests = array_keys($this->test_data);
         $this->methods = get_class_methods($this);
@@ -122,7 +124,7 @@ class lhSelfTestingClass {
     }
     
     private function _test_runTests() {
-        $this->log(__FUNCTION__);
+        $this->log();
         echo sprintf("\nTesting %s...\n", get_class($this));
         while ($this->func = array_shift($this->tests)) {
             echo "function $this->func";
@@ -140,7 +142,7 @@ class lhSelfTestingClass {
     }
 
     private function _test_doTest() {
-        $this->log(__FUNCTION__);
+        $this->log();
         $test_set = $this->test_data[$this->func];
         if (is_array($test_set)) {
             $this->_test_doSimpleTest($test_set);
@@ -153,7 +155,7 @@ class lhSelfTestingClass {
     }
     
     private function _test_doSimpleTest($_test_set) {
-        $this->log(__FUNCTION__);
+        $this->log();
         foreach ($_test_set as $arg_set) {
             $this->iteration++; echo '.';
             $await = array_pop($arg_set);
@@ -169,7 +171,7 @@ class lhSelfTestingClass {
     }
 
         private function _test_checkResult($_result, $_await) {
-        $this->log(__FUNCTION__);
+        $this->log();
 
         if (is_a($_await, 'Exception')) {
             return $this->_test_checkException($_result, $_await);
@@ -180,7 +182,7 @@ class lhSelfTestingClass {
     }
 
     private function _test_checkException($_result, $_await) {
-        $this->log(__FUNCTION__);
+        $this->log();
         if (is_a($_result, 'Exception')) {
             return $this->_test_checkExceptionCode($_result, $_await);
         } else {
@@ -192,7 +194,7 @@ class lhSelfTestingClass {
     }
     
     private function _test_checkExceptionCode($_result, $_await) {
-        $this->log(__FUNCTION__);
+        $this->log();
         if ($_result->getCode() == $_await->getCode()) {
             return TRUE;
         } else {
@@ -206,7 +208,7 @@ class lhSelfTestingClass {
     }
     
     private function _test_finalCheck() {
-        $this->log(__FUNCTION__);
+        $this->log();
         $did_not_tested = [];
         while ($check = array_shift($this->methods)) {
             if ($check == '__construct') continue;

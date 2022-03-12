@@ -49,6 +49,7 @@ class lhTest extends lhSelfTestingClass {
     private $reader;
 
     public function __construct($_func, ...$_args) {
+        $this->log();
         $this->func = $_func;
         $this->args = $_args;
         $this->reader = function & ($object, $property) {
@@ -58,6 +59,7 @@ class lhTest extends lhSelfTestingClass {
 
             return $value;
         };
+        $this->log('return');
     }
     
     public function test($_result) {
