@@ -2,8 +2,7 @@
 define('LHSELFTESTINGCLASS_DEBUG_LEVEL', 10);
 define('LHTEST_DEBUG_LEVEL', 10);
 require_once __DIR__ . '/autoloader.php';
-lhSelfTestingClass::$logfile = 'C:/Users/drweb_000/Desktop/MyData/2AC9~1/GitHub/lhTestingSuite/self-testing.log';
-date_default_timezone_set('Europe/Moscow');
+require_once __DIR__. '/localsettings.php'; // Ex. lhSelfTestingClass::$logfile = 'some_path'; and/or date_default_timezone_set('Europe/Moscow');
 
 try {
     $test = new lhTest(lhTest::EQ, 0);
