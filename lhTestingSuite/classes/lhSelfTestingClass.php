@@ -170,7 +170,7 @@ class lhSelfTestingClass {
         return TRUE;
     }
 
-        private function _test_checkResult($_result, $_await) {
+    protected function _test_checkResult($_result, $_await) {
         $this->log();
 
         if (is_a($_await, 'Exception')) {
