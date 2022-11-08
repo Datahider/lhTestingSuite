@@ -74,13 +74,13 @@ class lhTest extends lhSelfTestingClass {
     }
     
     protected function _EQ_($_result, $_value) {
-        if (!($_result == $_value)) {
+        if (!($_result === $_value)) {
             throw new Exception($this->_t("Awaiting value to be equals %s but got %s", $_value, $_result), -10002);
         }
     }
     
     protected function _NE_($_result, $_value) {
-        if (!($_result != $_value)) {
+        if (!($_result !== $_value)) {
             throw new Exception($this->_t("Awaiting value not to be equals %s but got %s", $_value, $_result), -10002);
         }
     }
