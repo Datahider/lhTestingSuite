@@ -1,9 +1,9 @@
 {
-    "name": "pio/self-testing-suite",
+    "name": "losthost/self-testing-suite",
     "description": "A parrent class for self-testing classes",
     "authors": [
         {
-            "name": "pio",
+            "name": "Petros Ioannidis",
             "email": "pio@pio.su"
         }
     ],
@@ -12,7 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "pio\\SelfTestingSuite\\": "src"
+            "losthost\\SelfTestingSuite\\": "src"
         }
     }
 }

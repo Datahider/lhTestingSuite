@@ -8,10 +8,10 @@
  * будет указан экземпляр Test - для проверки результата будет вызвана
  * функция указанная в конструкторе
  *
- * @author pio
+ * @author Petros Ioannidis <pio@pio.su>
  */
 
-namespace pio\SelfTestingSuite;
+namespace losthost\SelfTestingSuite;
 
 class Test extends SelfTestingClass {
     const EQ = '_EQ_';
@@ -385,7 +385,7 @@ class Test extends SelfTestingClass {
                 [json_decode('{"value": "some text"}'), "stdClass", NULL], 
                 [[3812], "Array", new \Exception("USE Test::IS_ARRAY", -10002)], 
                 [3812, "Scalar", new \Exception("USE Test::RANGE", -10002)], 
-                [new Test(Test::EQ), "pio\SelfTestingSuite\SelfTestingClass", NULL], 
+                [new Test(Test::EQ), "losthost\SelfTestingSuite\SelfTestingClass", NULL], 
                 [new Test(Test::EQ), "Dummy", new \Exception("Does not match", -10002)], 
             ],
             '_FIELD_' => [

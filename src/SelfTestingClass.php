@@ -9,10 +9,10 @@
  * Для отладочного логирования используйте $this->log(...) и $this->logStatic(...)
  * где второй отправляет сообщение в лог всегда, а первый только при установленном
  * уровне отладочного логирования (константа NAMESPACE_NAME_YOURCLASS_DEBUG_LEVEL)
- * @author pio
+ * @author Petros Ioannidis <pio@pio.su>
  */
 
-namespace pio\SelfTestingSuite;
+namespace losthost\SelfTestingSuite;
 
 class SelfTestingClass {
     static public $logfile;
