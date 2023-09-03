@@ -135,7 +135,7 @@ class SelfTestingClass {
             unset($this->test_data[$this->func]);
             $index = array_search($this->func, $this->methods);
             if ($index !== false) {
-                unset($this->methods[]);
+                unset($this->methods[$index]);
             }
             echo " ok\n";
         }
