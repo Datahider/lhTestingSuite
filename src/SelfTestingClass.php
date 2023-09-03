@@ -130,6 +130,9 @@ class SelfTestingClass {
         echo sprintf("\nTesting %s...\n", get_class($this));
         while ($this->func = array_shift($this->tests)) {
             echo "function $this->func";
+            if (array_search($this->func, $this->methods, true) === false) {
+                throw new \Exception("Member function $this->func does not exist.", 981239);
+            }
             $this->iteration = 0;
             $this->_test_doTest();
             unset($this->test_data[$this->func]);

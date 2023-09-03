@@ -573,7 +573,8 @@ class Test extends SelfTestingClass {
             'test' => '_test_test',
             'logStatic' => [
                 ['This message have to be visible in log', null],
-            ]
+            ],
+            'unexistant1' => '_test_skip_', 
         ];
     }
 
