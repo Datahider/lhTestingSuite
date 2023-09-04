@@ -169,7 +169,7 @@ class SelfTestingClass {
             $await = array_pop($arg_set);
             $args = $arg_set;
 
-            if (!is_a($await, 'Test') && !is_a($await, '\Exception')) {
+            if (!is_a($await, 'losthost\SelfTestingSuite\Test') && !is_a($await, '\Exception')) {
                 $await = new Test(Test::EQ, $await);
             }
         

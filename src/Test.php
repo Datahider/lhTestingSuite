@@ -375,6 +375,7 @@ class Test extends SelfTestingClass {
             ],
             '_PCRE_' => [
                 [575, "/\\d+/", NULL], 
+                [575, "/\\d+/", new Test(Test::EQ, NULL)], 
                 [3812, "/\\d{2,3}/", NULL], 
                 [3812, "/^\\d{2,3}$/", new \Exception("Does not match", -10002)], 
                 [3, "/\\d{2,3}/", new \Exception("Does not match", -10002)], 
