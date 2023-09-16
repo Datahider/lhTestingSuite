@@ -35,10 +35,10 @@ class SelfTestingClass {
             $log_message = "|$mem| $function - $log_message";
             if (SelfTestingClass::$logfile) {
                 $log_file = fopen(SelfTestingClass::$logfile, 'a');
-                fwrite($log_file, date(DATE_ISO8601).": ${class}[$_level]:: $log_message\n"); 
+                fwrite($log_file, date(DATE_ISO8601).": {$class}[$_level]:: $log_message\n"); 
                 fclose($log_file);
             } else {
-                error_log("${class}[$level]:: $log_message");
+                error_log("{$class}[$level]:: $log_message");
             }
         }
     }

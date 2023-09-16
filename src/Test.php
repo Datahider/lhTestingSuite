@@ -49,18 +49,10 @@ class Test extends SelfTestingClass {
 
     private $func;
     private $args;
-    private $reader;
 
     public function __construct($_func, ...$_args) {
         $this->func = $_func;
         $this->args = $_args;
-        $this->reader = function & ($object, $property) {
-            $value = & \Closure::bind(function & () use ($property) {
-                return $this->$property;
-            }, $object, $object)->__invoke();
-
-            return $value;
-        };
     }
     
     public function test($_result) {
@@ -72,6 +64,18 @@ class Test extends SelfTestingClass {
         } else {
             throw new \Exception("Constructor argument 1 must be a callable or one of predefined constants");
         }
+    }
+    
+    protected function getProperty($_object, $_property) {
+        $reflection = new \ReflectionObject($_object);
+        try {
+            $property = $reflection->getProperty($_property);
+        } catch (\ReflectionException $re) {
+            if (preg_match("/^Property .* does not exist$/", $re->getMessage())) {
+                throw new \Exception($re->getMessage(), -10002);
+            }
+        }
+        return $property->getValue($_object);
     }
     
     protected function _EQ_($_result, $_value) {
@@ -141,8 +145,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, '\Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_EQ_($reader($_result, $_name), $_value);
+            $this->_EQ_($this->getProperty($_result, $_name), $_value);
         }
     }
 
@@ -152,8 +155,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_NE_($reader($_result, $_name), $_value);
+            $this->_NE_($this->getProperty($_result, $_name), $_value);
         }
     }
     
@@ -163,8 +165,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_LT_($reader($_result, $_name), $_value);
+            $this->_LT_($this->getProperty($_result, $_name), $_value);
         }
     }
 
@@ -174,8 +175,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_LE_($reader($_result, $_name), $_value);
+            $this->_LE_($this->getProperty($_result, $_name), $_value);
         }
     }
     
@@ -185,8 +185,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_GT_($reader($_result, $_name), $_value);
+            $this->_GT_($this->getProperty($_result, $_name), $_value);
         }
     }
 
@@ -196,8 +195,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_GE_($reader($_result, $_name), $_value);
+            $this->_GE_($this->getProperty($_result, $_name), $_value);
         }
     }
     
@@ -207,8 +205,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_RANGE_($reader($_result, $_name), $_value1, $_value2);
+            $this->_RANGE_($this->getProperty($_result, $_name), $_value1, $_value2);
         }
     }
     
@@ -218,8 +215,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_PCRE_($reader($_result, $_name), $_pattern);
+            $this->_PCRE_($this->getProperty($_result, $_name), $_pattern);
         }
     }
     
@@ -229,8 +225,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_IS_A_($reader($_result, $_name), $_class_name);
+            $this->_IS_A_($this->getProperty($_result, $_name), $_class_name);
         }
     }
     
@@ -240,8 +235,7 @@ class Test extends SelfTestingClass {
         } elseif (is_a($_result, 'Exception')) {
             throw $_result;
         } else {
-            $reader = $this->reader;
-            $this->_IS_ARRAY_($reader($_result, $_name));
+            $this->_IS_ARRAY_($this->getProperty($_result, $_name));
         }
     }
     
